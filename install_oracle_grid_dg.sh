@@ -729,9 +729,10 @@ oracle_can_write_dir() {
 seed_resume_checkpoints() {
   [[ "$CHECK_MODE" -eq 0 && "$DISCOVER_MODE" -eq 0 ]] || return 0
   echo "Seeding resume checkpoints from current host state where possible."
-  all_required_groups_exist && mark_checkpoint "step_02" "Creating users and groups"
-  rpm -q oracle-database-preinstall-19c tuned-profiles-oracle p7zip unzip rlwrap tmux >/dev/null 2>&1 && mark_checkpoint "step_03" "Installing OS prerequisites"
-  firewall-cmd --permanent --zone=public --list-ports 2>/dev/null | grep -qw "1521/tcp" && mark_checkpoint "step_04" "Configuring SELinux and firewall"
+  # Do not infer OS preparation checkpoints from ambient host state. The same
+  # packages, groups, or firewall rules can exist on a template before this
+  # document was actually executed, so steps 02-04 must be skipped only when
+  # this script previously completed them and wrote explicit checkpoints.
   [[ "$(hostnamectl --static 2>/dev/null || true)" == "$HOSTNAME_FQDN" ]] && mark_checkpoint "step_05" "Configuring hostname and /etc/hosts"
   mount_is_active "$U01_MOUNT_POINT" && mount_is_active "$U02_MOUNT_POINT" && mark_checkpoint "step_06" "Configuring /u01 and /u02"
   all_required_home_zips_exist && mark_checkpoint "step_07" "Copying installers to oracle home"
@@ -1050,7 +1051,7 @@ move_installers() {
 
 configure_oracle_profile() {
   phase 8 "Configuring oracle password and .bash_profile" "Creating Oracle directories"
-  echo "oracle:${ORACLE_USER_PASSWORD}" | chpasswd
+  printf '%s:%s\n' "oracle" "$ORACLE_USER_PASSWORD" | timeout 60s chpasswd
   run_cmd install -o oracle -g oinstall -m 0644 /dev/null /home/oracle/.bash_profile
   cat > /home/oracle/.bash_profile <<EOF
 # Alias
