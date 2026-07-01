@@ -1,0 +1,60 @@
+# Oracle Grid Infrastructure 19c + ASM/AFD + Oracle Database 19c variables
+# Keep this file readable only by root because it contains Oracle passwords.
+
+HOSTNAME_FQDN=oracle-dg01.localdomain
+HOSTNAME_SHORT=oracle-dg01
+HOST_ALIAS=dg01
+HOST_IP=192.168.3.65
+IS_STANDBY="no"
+PRIMARY_HOST_IP=192.168.3.65
+PRIMARY_HOSTNAME_FQDN=oracle-dg01.localdomain
+PRIMARY_HOSTNAME_SHORT=oracle-dg01
+PRIMARY_HOST_ALIAS=dg01
+
+ORACLE_SID=PROD
+ORACLE_UNQNAME=PROD_A
+PDB_NAME=ORCL
+
+ORACLE_BASE=/u01/app/oracle
+ORACLE_HOME=/u01/app/oracle/product/19c/db_1
+GRID_HOME=/u01/app/19c/grid
+INVENTORY_LOCATION=/u01/app/oraInventory
+INSTALLER_SOURCE_DIR=/root
+
+ORACLE_USER_PASSWORD="<CHANGE_ME>"
+SYS_PASSWORD="<CHANGE_ME>"
+SYSTEM_PASSWORD="<CHANGE_ME>"
+PDB_ADMIN_PASSWORD="<CHANGE_ME>"
+ASM_SYSASM_PASSWORD="<CHANGE_ME>"
+ASM_MONITOR_PASSWORD="<CHANGE_ME>"
+
+# Disk discovery
+AFD_DISKSTRING="/dev/sd*"
+
+# ASM disks
+DATA_DISKS="/dev/sdb /dev/sdc"
+RECO_DISK="/dev/sdd"
+# For silent Grid setup, leave DATA disks unlabeled and let ASMCA/Grid label them.
+# Pre-labeling DATA01/DATA02 before executeConfigTools can make ASMCA fail with
+# ORA-15225/ORA-15224 because it tries to provision DATA1/DATA2 itself.
+PRELABEL_DATA_AFD="no"
+
+# Filesystem mount configuration
+U01_MOUNT_POINT="/u01"
+U01_VG_NAME="VG00"
+U01_LV_NAME="LVU01"
+U01_DISK="/dev/sdg"
+
+U02_MOUNT_POINT="/u02"
+U02_VG_NAME="VG01"
+U02_LV_NAME="LVU02"
+U02_DISK="/dev/sdf"
+
+CREATE_U01_IF_MISSING="yes"
+CREATE_U02_IF_MISSING="yes"
+
+DB_CHARACTERSET=WE8MSWIN1252
+SGA_TARGET=1600MB
+PGA_AGGREGATE_TARGET=767MB
+DB_RECOVERY_FILE_DEST_SIZE=11400MB
+REDO_LOG_FILE_SIZE_MB=256

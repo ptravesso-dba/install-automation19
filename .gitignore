@@ -1,0 +1,10 @@
+logs/
+status/
+backups/
+*.log
+*.status
+*.checkpoint
+oracle_grid_dg_vars.conf
+*.bkp
+*.tmp
+*.swp
