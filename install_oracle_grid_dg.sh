@@ -1051,7 +1051,7 @@ move_installers() {
 
 configure_oracle_profile() {
   phase 8 "Configuring oracle password and .bash_profile" "Creating Oracle directories"
-  printf '%s:%s\n' "oracle" "$ORACLE_USER_PASSWORD" | timeout 60s chpasswd
+  ORACLE_USER_PASSWORD_VALUE="$ORACLE_USER_PASSWORD" timeout 60s bash -c 'printf "%s:%s\n" "oracle" "$ORACLE_USER_PASSWORD_VALUE" | chpasswd'
   run_cmd install -o oracle -g oinstall -m 0644 /dev/null /home/oracle/.bash_profile
   cat > /home/oracle/.bash_profile <<EOF
 # Alias
